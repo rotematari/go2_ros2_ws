@@ -1,0 +1,5 @@
+# Request
+geometry_msgs/Pose[] poses
+---
+# Response
+bool success
