@@ -14,7 +14,7 @@ share_dir = get_package_share_directory('model_node')
 
 class PathTrackerNode(Node):
     def __init__(self):
-        super().__init__('path_tracker_node')
+        super().__init__('goal_pose_pub_node')
         
         # Subscriber: listen to prompt_topic for String messages
         self.subscription = self.create_subscription(
@@ -24,10 +24,12 @@ class PathTrackerNode(Node):
             10
         )
         self.subscription  # prevent unused variable warning
-
-        # Publisher: publish PATH messages
-        self.publisher = self.create_publisher(Path, '/path', 10)
-        self.get_logger().info("PathTrackerNode has been started.")
+        self.publisher_ = self.create_publisher(
+            PoseStamped,
+            'goal_pose',
+            10
+        )
+        self.get_logger().info("GoalPosePubNode has been started.")
         self.model_init()
         self.get_logger().info("Model has been initialized.")
     
@@ -85,38 +87,28 @@ class PathTrackerNode(Node):
         # Run the model
         predicted_trajectory = self.run_model(msg.data)
         self.get_logger().info(f"Model output: {predicted_trajectory}")
+        predicted_goal_pose = predicted_trajectory[-1]
+        self.get_logger().info(f"Predicted goal pose: {predicted_goal_pose}")
         
         # Create and populate a Path message
-        path_msg = Path()
-        path_msg.header.frame_id = "base_footprint"
+
+        pose = PoseStamped()
+        pose.header.frame_id = "base_footprint"
+        pose.header.stamp = self.get_clock().now().to_msg()
         
-        path = []
-        for trajectory_pose in predicted_trajectory:
-            pose = PoseStamped()
-            pose.header.frame_id = "base_footprint"
-            pose.header.stamp = self.get_clock().now().to_msg()
-            
-            #position
-            pose.pose.position.x = float(trajectory_pose[0])
-            pose.pose.position.y = float(trajectory_pose[1])
-            # orientation
-            
-            pose.pose.orientation.x = 0.0
-            pose.pose.orientation.y = 0.0
-            pose.pose.orientation.z = float(trajectory_pose[2])
-            pose.pose.orientation.w = float(trajectory_pose[3])
-            
-            
-            path.append(pose)
+        #position
+        pose.pose.position.x = float(predicted_goal_pose[0])
+        pose.pose.position.y = float(predicted_goal_pose[1])
+        pose.pose.position.z = 0.0
+        # orientation
         
-        path_msg.poses.extend(path)
-        # Populate path_msg fields as needed, for example:
-        # path_msg.header.stamp = self.get_clock().now().to_msg()
-        # path_msg.header.frame_id = "map"
-        # Add other fields initialization here based on your PATH msg definition
-        path_msg.header.stamp = self.get_clock().now().to_msg()
-        # Publish the PATH message
-        self.publisher.publish(path_msg)
+        pose.pose.orientation.x = 0.0
+        pose.pose.orientation.y = 0.0
+        pose.pose.orientation.z = float(predicted_goal_pose[2])
+        pose.pose.orientation.w = float(predicted_goal_pose[3])
+
+        self.get_logger().info(f"Publishing pose: position=({pose.pose.position.x}, {pose.pose.position.y}), orientation=({pose.pose.orientation.x}, {pose.pose.orientation.y}, {pose.pose.orientation.z}, {pose.pose.orientation.w})")
+        self.publisher_.publish(pose)
         self.get_logger().info("Published PATH message.")
 
 def main(args=None):

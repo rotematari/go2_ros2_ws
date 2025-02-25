@@ -26,7 +26,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'path_traker_node = path_traker.path_traker_node:main',
+            'path_traker_node = path_traker.path_traker_node_2:main',
             'path_pub = path_traker.path_pub:main',
             'path_pub_real = path_traker.path_pub_real:main',
             

@@ -28,7 +28,7 @@ class PathPlannerNode(Node):
         goal_y = msg.pose.position.y
         goal_yaw = self.quaternion_to_yaw(msg.pose.orientation)
         self.get_logger().info(f'Goal pose: ({goal_x}, {goal_y}, {goal_yaw})')
-        self.plan(goal_x, goal_y, goal_yaw, curvature=20)
+        self.plan(goal_x, goal_y, goal_yaw)
         # Update path header time and publish the updated path
         self.path.header.stamp = self.get_clock().now().to_msg()
         self.publisher.publish(self.path)
@@ -48,14 +48,15 @@ class PathPlannerNode(Node):
         # Get the quaternion (in [x, y, z, w] order)
         q = r.as_quat()
         return q
-    def plan(self, g_x, g_y, g_yaw, curvature,
-                     step_size=0.1, selected_types=None):
+    def plan(self, g_x, g_y, g_yaw):
         
         path_x, path_y, path_yaw, mode, lengths = plan_dubins_path( 0, 0, 0,
                                                                     g_x, g_y, g_yaw,
                                                                     curvature=20,
-                                                                    step_size=0.1)
+                                                                    step_size=5)
         
+        for x, y, yaw in zip(path_x, path_y, path_yaw):
+            self.get_logger().info(f'Pose: x={x}, y={y}, yaw={yaw}')
         # Plan a Dubins path
         self.get_logger().info(f'Planned a Dubins path with {len(path_x)} poses.')
         self.path.poses = []

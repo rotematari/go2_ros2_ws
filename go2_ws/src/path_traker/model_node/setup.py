@@ -33,6 +33,7 @@ setup(
         'console_scripts': [
             'prompt_pub = model_node.prompt_pub:main',
             'model_path_pub = model_node.model_path_pub:main',
+            'model_goal_pose_pub = model_node.model_goal_pose_pub:main',
         ],
     },
 )

@@ -1,0 +1,6 @@
+image: empty_map.pgm
+resolution: 0.05        # Each pixel represents 5 cm in the world.
+origin: [-20.0, -20.0, 0.0] # The map's origin (x, y, yaw) in meters and radians.
+negate: 0             # 0 means white is free space.
+occupied_thresh: 0.65 # Pixels darker than 0.65 are considered occupied.
+free_thresh: 0.196    # Pixels lighter than 0.196 are considered free.

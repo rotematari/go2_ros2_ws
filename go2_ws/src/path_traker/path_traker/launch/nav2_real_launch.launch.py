@@ -16,7 +16,7 @@ def generate_launch_description():
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
     
-    remappings = [('/tf', 'tf'), ('/tf_static', 'tf_static')]
+    remappings = [('/odom', '/footprint_odom')]
     # remappings = []
     
     
@@ -65,7 +65,7 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[params_file],
                 arguments=['--ros-args', '--log-level', log_level],
-                # remappings=remappings + [('cmd_vel', 'cmd_vel_nav')],
+                remappings=remappings,
             )
     smoother_server = Node(
                 package='nav2_smoother',
@@ -87,7 +87,7 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[params_file],
                 arguments=['--ros-args', '--log-level', log_level],
-                # remappings=remappings + [('cmd_vel', 'cmd_vel_nav')],
+                remappings=remappings ,
             )
     bt_navigator = Node(
                 package='nav2_bt_navigator',
@@ -109,8 +109,7 @@ def generate_launch_description():
                 respawn_delay=2.0,
                 parameters=[params_file],
                 arguments=['--ros-args', '--log-level', log_level],
-                remappings=remappings
-                + [('cmd_vel', 'cmd_vel_nav')],
+                remappings=remappings,
             )
     planner_server = Node(
                 package='nav2_planner',
