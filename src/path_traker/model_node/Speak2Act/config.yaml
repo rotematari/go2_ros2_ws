@@ -4,7 +4,7 @@ model_name: DP1
 root_train: "/home/roblab20/PycharmProjects/Go_Teleop/clean_data/ordered_data"
 saveM_path: "/home/roblab20/PycharmProjects/Speak2Act/checkpoint/BERT"
 path4summary: "/home/roblab20/PycharmProjects/Speak2Act/checkpoint/BERT"
-checkpoint: "/home/admina/go2_ros2_ws/go2_ws/src/path_traker/model_node/Speak2Act/checkpoint/24_net_Thu_Feb_13_19_30_51_2025.pt"
+checkpoint: "/home/admina/go2_ros2_ws/src/path_traker/model_node/Speak2Act/checkpoint/24_net_Thu_Feb_13_19_30_51_2025.pt"
 
 # Data loading configurations
 batch_size: 64

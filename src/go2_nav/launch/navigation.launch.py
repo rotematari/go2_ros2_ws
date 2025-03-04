@@ -69,7 +69,7 @@ def generate_launch_description():
         'params_file', default_value=os.path.join(
             package_dir,
             'params',
-            'go2_nav_params.yaml')
+            'go2_nav_params_1.yaml')
     )
 
     declare_namespace_cmd = DeclareLaunchArgument(
@@ -98,6 +98,7 @@ def generate_launch_description():
             'use_sim_time': use_sim_time,
             'params_file': params_file,
             'namespace': namespace
+            
         }.items()
     )
 
@@ -108,7 +109,11 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': use_sim_time,
             'rviz': rviz,
-            'namespace': namespace
+            'namespace': namespace,
+            'rviz_config': os.path.join(
+                package_dir,
+                'rviz',
+                'nav2_default_view.rviz')
         }.items()
     )
 
@@ -124,7 +129,7 @@ def generate_launch_description():
     ld.add_action(declare_namespace_cmd)
     ld.add_action(localization_cmd)
     ld.add_action(navigation_cmd)
-    # ld.add_action(rviz_cmd)
+    ld.add_action(rviz_cmd)
     ld.add_action(cmd_vel_remap)
 
     return ld
