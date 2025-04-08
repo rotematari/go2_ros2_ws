@@ -31,12 +31,12 @@ class PathPlannerNode(Node):
         self.get_logger().info('Path Planner Node started.')
 
     def goal_pose_callback(self, msg: PoseStamped):
-        self.get_logger().info('Received a new goal pose.')
+        # self.get_logger().info('Received a new goal pose.')
         
         goal_x = msg.pose.position.x
         goal_y = msg.pose.position.y
         goal_yaw = self.quaternion_to_yaw(msg.pose.orientation)
-        self.get_logger().info(f'Goal pose: ({goal_x}, {goal_y}, {goal_yaw})')
+        # self.get_logger().info(f'Goal pose: ({goal_x}, {goal_y}, {goal_yaw})')
         self.plan(goal_x, goal_y, goal_yaw)
         # Update path header time and publish the updated path
         self.path.header.stamp = self.get_clock().now().to_msg()
@@ -64,10 +64,10 @@ class PathPlannerNode(Node):
                                                                     curvature=20,
                                                                     step_size=5)
         
-        for x, y, yaw in zip(path_x, path_y, path_yaw):
-            self.get_logger().info(f'Pose: x={x}, y={y}, yaw={yaw}')
+        # for x, y, yaw in zip(path_x, path_y, path_yaw):
+            # self.get_logger().info(f'Pose: x={x}, y={y}, yaw={yaw}')
         # Plan a Dubins path
-        self.get_logger().info(f'Planned a Dubins path with {len(path_x)} poses.')
+        # self.get_logger().info(f'Planned a Dubins path with {len(path_x)} poses.')
         self.path.poses = []
         for x, y, yaw in zip(path_x, path_y, path_yaw):
             
@@ -89,7 +89,7 @@ class PathPlannerNode(Node):
     
     def transform_pose_to_map(self, pose : PoseStamped):
     
-        self.get_logger().info(f"Transforming pose from {pose.header.frame_id} to map frame")
+        # self.get_logger().info(f"Transforming pose from {pose.header.frame_id} to map frame")
         # Create a new path object that will contain the transformed poses
         transformed_path = Path()
         transformed_path.header.stamp = self.get_clock().now().to_msg()
@@ -116,7 +116,7 @@ class PathPlannerNode(Node):
                 # Add the transformed pose to the new path
             transformed_path.poses.append(transformed_pose)
                 
-            self.get_logger().info(f"Successfully transformed pose to map frame")
+            # self.get_logger().info(f"Successfully transformed pose to map frame")
             return transformed_pose
             
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as e:

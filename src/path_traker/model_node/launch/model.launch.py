@@ -25,7 +25,7 @@ def generate_launch_description():
     # Nodes to be launched when path == false
     model_goal_pose_pub_node = Node(
         package='model_node',
-        executable='model_goal_pose_pub',
+        executable='new_model_goal_pose_pub',
         name='model_goal_pose_pub',
         output='screen',
         condition=UnlessCondition(path_arg)

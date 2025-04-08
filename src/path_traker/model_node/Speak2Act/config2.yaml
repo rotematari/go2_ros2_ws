@@ -1,0 +1,40 @@
+model_name: DP1
+
+# Directories
+root_train: "/home/roblab20/PycharmProjects/Go_Teleop/clean_data/ordered_data"
+saveM_path: "/home/roblab20/PycharmProjects/Speak2Act/checkpoint/BERT"
+path4summary: "/home/roblab20/PycharmProjects/Speak2Act/checkpoint/BERT"
+checkpoint: "/home/admina/go2_ros2_ws/src/path_traker/model_node/Speak2Act/checkpoint/18_net_Sun_Mar__9_12_20_05_2025.pt"
+
+# Data loading configurations
+batch_size: 64
+max_length: 50
+out_size: 1
+drop_last: true
+workers: 2
+
+# Tokenization
+tokenizer_type: "BERT"
+vocab_size: 30522
+
+# Model creation configuration
+input_size: 1
+embedding_dim: 512
+hidden_size: 1024
+num_heads: 8
+num_layers: 6
+seq_length: 512
+max_seq_len_out: 1
+dropout: 0.1
+
+# Optimizer parameters
+beta1: 0.9
+beta2: 0.999
+weight_decay: 1.25e-06
+lr: 0.0001
+
+# Training parameters
+epochs: 30
+
+# Device
+device: "cuda:0"

@@ -8,6 +8,7 @@ from geometry_msgs.msg import PoseStamped
 from nav2_simple_commander.robot_navigator import BasicNavigator
 from rclpy.duration import Duration
 from nav2_msgs.action import FollowPath,FollowWaypoints,NavigateToPose
+from std_msgs.msg import String
 # Add these imports at the top of your file
 
 #!/usr/bin/env python3
@@ -22,35 +23,30 @@ class PathTrakerNode(Node):
         )
         # Initialize publishers, subscribers, etc. as needed.
         self.subscription = self.create_subscription(Path, '/path', self.path_callback, qos_profile)
+        self.botton_sub = self.create_subscription(String, '/botton_output', self.button_callback, qos_profile)
         # self.goal_pose_sub = self.create_subscription(PoseStamped, '/my_goal_pose', self.goal_pose_callback, qos_profile)
         
         self.navogator = BasicNavigator()
-
+        self.path_to_execute = Path()
+        self.moving = False
         # self.follow_path_client = ActionClient(self, FollowPath, 'follow_path')
         # self.nav_to_pose_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
 
         # self.path_callback()
-        
-    def path_callback(self, msg: Path):
-        self.get_logger().info(f"Received path with {len(msg.poses)} poses in frame {msg.header.frame_id}")
-        
-        # Transform path to map frame if it's not already in map frame
-        if msg.header.frame_id != "map":
-            transformed_path = self.transform_path_to_map(msg)
-            if transformed_path is None:
-                self.get_logger().error("Path transformation failed. Cannot execute path.")
+    def button_callback(self, msg: String):
+        self.get_logger().info(f"Received message: {msg.data}")
+        if msg.data == "move":
+            self.get_logger().info("move robot.")
+            if self.path_to_execute is None:
+                self.get_logger().error("No path to execute.")
                 return
-            path_to_execute = transformed_path
-        else:
-            path_to_execute = msg
+
+            self.navogator.followPath(self.path_to_execute, controller_id="FollowPath", goal_checker_id="general_goal_checker")
+            
+    def path_callback(self, msg: Path):
         
-        user_input = input("Please verify the path in RViz. Enter '1' to approve, or press enter to cancel: ")
-        if user_input.strip() != "1":
-            self.get_logger().info("Path execution cancelled by user.")
-            return
-    
-        self.navogator.followPath(path_to_execute, controller_id="FollowPath", goal_checker_id="general_goal_checker")
-        self.get_logger().info("Path Traker Node finished.")
+        self.path_to_execute = msg
+        self.get_logger().info("Received path.")
         
     def goal_pose_callback(self, msg : PoseStamped):
         # self.get_logger().info(f"Received goal pose: {msg}")

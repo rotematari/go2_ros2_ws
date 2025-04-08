@@ -34,6 +34,8 @@ setup(
             'prompt_pub = model_node.prompt_pub:main',
             'model_path_pub = model_node.model_path_pub:main',
             'model_goal_pose_pub = model_node.model_goal_pose_pub:main',
+            'new_model_goal_pose_pub = model_node.new_model_goal_pose:main',
+            
         ],
     },
 )
